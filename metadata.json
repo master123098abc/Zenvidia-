@@ -1,0 +1,6 @@
+{
+  "name": "Zenova Media",
+  "description": "Guwahati's #1 hyperlocal influencer marketplace platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
