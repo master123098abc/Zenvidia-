@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Compass, MessageSquare, User } from 'lucide-react';
+import { Home, Clapperboard, MessageSquare, User } from 'lucide-react';
 
 interface BottomNavProps {
   currentView: string;
@@ -24,9 +24,9 @@ export default function BottomNav({ currentView, onNavigate, onOpenReels, isHidd
 
         <button 
           onClick={() => onOpenReels()}
-          className={`flex flex-col items-center justify-center w-full h-full space-y-1 text-neutral-500 hover:text-neutral-300`}
+          className={`flex flex-col items-center justify-center w-full h-full space-y-1 text-neutral-500 hover:text-teal-400 transition-colors`}
         >
-          <Compass className="w-6 h-6" />
+          <Clapperboard className="w-6 h-6" />
         </button>
 
         <button 

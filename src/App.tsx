@@ -20,12 +20,14 @@ import ReelsFeedViewer from './components/ReelsFeedViewer';
 import BottomNav from './components/BottomNav';
 import BorderCat from './components/BorderCat';
 import { supabase } from './lib/supabase';
+import { playSfx } from './lib/sfx';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [showReelsFeed, setShowReelsFeed] = useState(false);
   const [view, setView] = useState<'HOME' | 'BRAND_DASHBOARD' | 'CREATOR_PORTAL' | 'CHAT' | 'DEAL_ROOM' | 'PAYOUT_DASHBOARD' | 'ONBOARDING' | 'ADMIN_DASHBOARD' | 'INBOX'>('HOME');
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const [authIntent, setAuthIntent] = useState<'brand' | 'creator' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCreatorChatOpen, setIsCreatorChatOpen] = useState(false);
   
@@ -38,6 +40,55 @@ export default function App() {
   );
 
   const [activeCreatorId, setActiveCreatorId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.closest('button') || 
+        target.closest('a') || 
+        target.closest('.cursor-pointer') || 
+        target.closest('[role="button"]') ||
+        target.tagName.toLowerCase() === 'input'
+      ) {
+        playSfx('tap');
+      }
+    };
+    
+    let touchY = 0;
+    let touchX = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches && e.touches.length > 0) {
+        touchY = e.touches[0].clientY;
+        touchX = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!e.changedTouches || e.changedTouches.length === 0) return;
+      const endY = e.changedTouches[0].clientY;
+      const endX = e.changedTouches[0].clientX;
+      const diffY = Math.abs(endY - touchY);
+      const diffX = Math.abs(endX - touchX);
+
+      // Simple swipe detection
+      if (diffY > 50 || diffX > 50) {
+        playSfx('swipe');
+      }
+    };
+
+    window.addEventListener('click', handleGlobalClick);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    return () => {
+      window.removeEventListener('click', handleGlobalClick);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    }
+  }, []);
+
   useEffect(() => {
     let mounted = true;
 
@@ -152,7 +203,17 @@ export default function App() {
          setPendingCreatorId(null);
          // creators can't message other creators currently, direct to portal
       }
-      setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'CREATOR_PORTAL' : prev);
+      
+      if (!isInitialLoad && authIntent === 'brand') {
+        setView('BRAND_DASHBOARD');
+        setAuthIntent(null);
+      } else if (!isInitialLoad && authIntent === 'creator') {
+        setView('CREATOR_PORTAL');
+        setAuthIntent(null);
+      } else {
+        setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'CREATOR_PORTAL' : prev);
+      }
+      
     } else if (type === 'BRAND' && data) {
       localStorage.setItem('zenova_brand', JSON.stringify(data));
       setCurrentBrandData(data);
@@ -162,7 +223,15 @@ export default function App() {
          setPendingCreatorId(null);
          setTimeout(() => handleMessageCreator(pid), 0);
       } else {
-         setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'BRAND_DASHBOARD' : prev);
+         if (!isInitialLoad && authIntent === 'brand') {
+           setView('BRAND_DASHBOARD');
+           setAuthIntent(null);
+         } else if (!isInitialLoad && authIntent === 'creator') {
+           setView('CREATOR_PORTAL');
+           setAuthIntent(null);
+         } else {
+           setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'BRAND_DASHBOARD' : prev);
+         }
       }
     }
     window.scrollTo(0, 0);
@@ -194,10 +263,12 @@ export default function App() {
 
   const handleNavigate = (newView: 'HOME' | 'BRAND_DASHBOARD' | 'CREATOR_PORTAL' | 'CHAT' | 'DEAL_ROOM' | 'PAYOUT_DASHBOARD' | 'INBOX') => {
     if (newView === 'BRAND_DASHBOARD' && !currentBrandData) {
+      setAuthIntent('brand');
       setAuthModalOpen(true);
       return;
     }
     if ((newView === 'CREATOR_PORTAL' || newView === 'INBOX') && !currentUserHandle && !currentBrandData) {
+      setAuthIntent('creator');
       setAuthModalOpen(true);
       return;
     }

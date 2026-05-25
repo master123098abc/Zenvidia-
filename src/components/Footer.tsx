@@ -34,11 +34,22 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-bold text-lg mb-4 px-2">Company</h4>
+            <h4 className="font-bold text-lg mb-4 px-2">Company & Support</h4>
             <ul className="space-y-1 font-medium text-neutral-400">
               <li><a href="#" className="block py-2 px-2 hover:text-orange-400 transition-colors hover:bg-neutral-900 rounded-lg">About Us</a></li>
               <li><a href="#" className="block py-2 px-2 hover:text-orange-400 transition-colors hover:bg-neutral-900 rounded-lg">Careers</a></li>
               <li><a href="#" className="block py-2 px-2 hover:text-orange-400 transition-colors hover:bg-neutral-900 rounded-lg flex items-center">Contact <Mail className="w-4 h-4 ml-2" /></a></li>
+              <li className="mt-4 pt-4 border-t border-neutral-800">
+                <a 
+                  href="https://www.instagram.com/zenvidia_official?igsh=eDh1YXZxNWg5OWd6" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center py-2 px-2 hover:text-teal-400 transition-colors hover:bg-neutral-900 rounded-lg group"
+                >
+                  <Instagram className="w-4 h-4 mr-2 group-hover:text-teal-400 transition-colors" />
+                  Follow Zenvidia Official
+                </a>
+              </li>
             </ul>
           </div>
 

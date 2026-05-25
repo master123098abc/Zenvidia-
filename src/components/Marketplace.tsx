@@ -96,7 +96,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
              <p className="text-neutral-500">Try adjusting your filters or search.</p>
           </div>
         ) : (
-          <div className="flex overflow-x-auto sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-8 pt-4 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory hide-scrollbar">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 max-w-sm mx-auto sm:max-w-none pb-8 pt-4 px-4 sm:px-0 overflow-y-auto overscroll-behavior-y-contain">
             {filteredCreators.map((item, i) => (
               <motion.div
                 layout
@@ -105,7 +105,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="min-w-[85vw] sm:min-w-0 snap-center snap-always flex-shrink-0"
+                className="w-full"
               >
                 <CreatorCard creator={item} onMessageCreator={onMessageCreator} userRole={userRole} />
               </motion.div>

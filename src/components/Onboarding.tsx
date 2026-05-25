@@ -249,7 +249,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1 md:col-span-2">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Full Name <span className="text-red-500">*</span></label>
-          <input type="text" value={cName} onChange={e => setCName(e.target.value)} placeholder="Your Name" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none" required />
+          <input type="text" value={cName} onChange={e => setCName(e.target.value)} placeholder="e.g., Rahul Sharma, Priya Singh" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none" required />
         </div>
         
         <div className="space-y-1">
@@ -327,7 +327,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Business Name</label>
-          <input type="text" value={bBusinessName} onChange={e => setBBusinessName(e.target.value)} placeholder="Your Company Ltd." className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
+          <input type="text" value={bBusinessName} onChange={e => setBBusinessName(e.target.value)} placeholder="e.g., Tata Motors, Zomato, Nykaa" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Instagram Handle</label>
@@ -340,17 +340,17 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Monthly Marketing Budget ($)</label>
-          <input type="number" value={bBudget} onChange={e => setBBudget(e.target.value)} placeholder="e.g. 5000" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
+          <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Monthly Marketing Budget (₹)</label>
+          <input type="text" value={bBudget} onChange={e => setBBudget(e.target.value)} placeholder="e.g., ₹50,000" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Phone Number</label>
-          <input type="tel" value={bPhone} onChange={e => setBPhone(e.target.value)} placeholder="+1 234 567 8900" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
+          <input type="tel" value={bPhone} onChange={e => setBPhone(e.target.value)} placeholder="+91 98765 43210" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
 
         <div className="space-y-1">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">City</label>
-          <input type="text" value={bCity} onChange={e => setBCity(e.target.value)} placeholder="e.g. New York" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
+          <input type="text" value={bCity} onChange={e => setBCity(e.target.value)} placeholder="e.g., Mumbai, Delhi, Guwahati" className="w-full px-4 py-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl focus:ring-2 focus:ring-orange-500 outline-none" />
         </div>
         <div className="space-y-1">
           <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider pl-1">Contact Email</label>

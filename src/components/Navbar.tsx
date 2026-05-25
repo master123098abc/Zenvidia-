@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Moon, Sun, ArrowLeft, Building, Star } from 'lucide-react';
+import { Menu, X, Moon, Sun, ArrowLeft, Building, Star, Bell } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface NavbarProps {
@@ -30,6 +30,7 @@ export default function Navbar({
   const setIsOpen = setIsMobileMenuOpen || setInternalIsOpen;
 
   const [isDark, setIsDark] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const isDarkStored = localStorage.getItem('zenova_dark_mode') === 'true';
@@ -51,6 +52,42 @@ export default function Navbar({
       localStorage.setItem('zenova_dark_mode', 'false');
     }
   };
+
+  const notificationDropdown = (
+    <div className={`absolute right-[-40px] md:right-0 top-full mt-4 w-72 md:w-80 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-xl transition-all duration-200 transform origin-top-right z-50 overflow-hidden ${
+      showNotifications ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-95'
+    }`}>
+      <div className="p-4 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center bg-neutral-50/50 dark:bg-neutral-800/50">
+        <h4 className="font-bold text-sm dark:text-white">Recent Activity</h4>
+        <div className="bg-cyan-100 dark:bg-cyan-900/50 text-cyan-600 dark:text-cyan-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">3 New</div>
+      </div>
+      <div className="max-h-[60vh] md:max-h-80 overflow-y-auto">
+        <div className="p-4 border-b border-neutral-50 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/80 transition-colors cursor-pointer group">
+           <div className="flex justify-between items-start mb-1">
+             <p className="text-xs text-neutral-900 dark:text-neutral-100 font-bold">New Deal Proposal</p>
+             <span className="w-2 h-2 rounded-full bg-cyan-500 mt-1"></span>
+           </div>
+           <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed group-hover:text-neutral-800 dark:group-hover:text-neutral-200 transition-colors">{currentBrandData ? 'A leading Creator' : 'A premium Brand'} has sent you a new proposal in your Deal Room.</p>
+           <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-2 font-medium">2 hours ago</p>
+        </div>
+        <div className="p-4 border-b border-neutral-50 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/80 transition-colors cursor-pointer group">
+           <p className="text-xs text-neutral-900 dark:text-neutral-100 font-bold mb-1">Profile Activity</p>
+           <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed group-hover:text-neutral-800 dark:group-hover:text-neutral-200 transition-colors">Your profile appeared in 45 targeted searches this week.</p>
+           <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-2 font-medium">1 day ago</p>
+        </div>
+        <div className="p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/80 transition-colors cursor-pointer group">
+           <div className="flex justify-between items-start mb-1">
+             <p className="text-xs text-neutral-900 dark:text-neutral-100 font-bold">System Update</p>
+           </div>
+           <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed group-hover:text-neutral-800 dark:group-hover:text-neutral-200 transition-colors">Welcome to the Zenvidia Beta! Check out the new Marketplace features.</p>
+           <p className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-2 font-medium">2 days ago</p>
+        </div>
+      </div>
+      <div className="p-3 border-t border-neutral-100 dark:border-neutral-800 text-center bg-neutral-50 dark:bg-neutral-900/80">
+        <button onClick={() => setShowNotifications(false)} className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 hover:underline">Mark all as read</button>
+      </div>
+    </div>
+  );
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/60 dark:bg-neutral-900/60 backdrop-blur-xl border-b border-white/40 dark:border-neutral-800/40 shadow-sm transition-all duration-300">
@@ -97,7 +134,16 @@ export default function Navbar({
             </button>
             
             {currentUserHandle || currentBrandData ? (
-               <div className="relative group">
+              <>
+                <div className="relative group">
+                  <button onClick={() => setShowNotifications(!showNotifications)} className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors relative mt-1 block">
+                    <Bell className="w-5 h-5" />
+                    <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-neutral-900"></span>
+                  </button>
+                  {notificationDropdown}
+                </div>
+                
+                <div className="relative group">
                 <button className="flex items-center space-x-2 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-full pr-4 p-1 hover:border-cyan-500/50 transition-colors cursor-default md:cursor-pointer">
                    <div className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-orange-400 p-[2px]">
                      <div className="w-full h-full rounded-full bg-white dark:bg-neutral-900 flex items-center justify-center overflow-hidden">
@@ -147,6 +193,7 @@ export default function Navbar({
                    </div>
                 </div>
               </div>
+              </>
             ) : (
               <button onClick={onOpenAuth} className="shimmer-btn bg-gradient-to-r from-cyan-500 hover:from-cyan-400 to-orange-500 hover:to-orange-400 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-orange-500/20 transform transition hover:-translate-y-0.5">
                 <span className="relative z-10">Get Started</span>
@@ -156,6 +203,16 @@ export default function Navbar({
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-4">
+            {(currentUserHandle || currentBrandData) && (
+              <div className="relative">
+                <button onClick={() => setShowNotifications(!showNotifications)} className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors relative mt-1 block">
+                  <Bell className="w-6 h-6" />
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-neutral-900"></span>
+                </button>
+                {notificationDropdown}
+              </div>
+            )}
+            
             <button onClick={toggleDarkMode} className="text-neutral-500 dark:text-neutral-400">
               {isDark ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
             </button>

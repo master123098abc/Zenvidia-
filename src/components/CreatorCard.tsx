@@ -123,42 +123,42 @@ export default function CreatorCard({ creator, onMessageCreator, userRole }: Cre
   return (
     <div 
       onClick={handleClickCard}
-      className="group relative bg-neutral-900/90 backdrop-blur-xl rounded-[2rem] p-4 sm:p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(20,184,166,0.15)] border border-neutral-800 shadow-2xl h-full flex flex-col cursor-pointer overflow-hidden"
+      className="group relative bg-neutral-900/90 backdrop-blur-xl rounded-[2rem] p-3 sm:p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(20,184,166,0.15)] border border-neutral-800 shadow-2xl h-full flex flex-col cursor-pointer overflow-hidden touch-action-pan-y"
     >
       
       {/* 2.5D Background Accent (visible on hover) */}
        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-orange-500/20 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       
       {/* Image Container with Teal Glow */}
-      <div className="relative flex-shrink-0 flex justify-center pt-2 pb-4">
+      <div className="relative flex-shrink-0 flex justify-center pt-2 pb-2 sm:pb-4">
         {/* Badges Container */}
-        <div className="absolute top-0 left-0 flex flex-col gap-2 items-start z-20">
+        <div className="absolute top-0 left-0 flex flex-col gap-1.5 sm:gap-2 items-start z-20">
           {/* Category Badge */}
-          <div className="bg-neutral-800/80 border border-neutral-700 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-neutral-300 shadow-sm uppercase tracking-wider">
+          <div className="bg-neutral-800/80 border border-neutral-700 backdrop-blur px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold text-neutral-300 shadow-sm uppercase tracking-wider">
             {niche}
           </div>
           {/* Status Badge */}
           {creator.status && (
-            <div className={`backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1.5 border
+            <div className={`backdrop-blur px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold shadow-sm uppercase tracking-wider flex items-center gap-1.5 border
               ${creator.status.toLowerCase() === 'pending' ? 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30' : 
                 creator.status.toLowerCase() === 'active' || creator.status.toLowerCase() === 'approved' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 
                 'bg-red-500/20 text-red-500 border-red-500/30'}
             `}>
-              <span className="text-xs uppercase">{creator.status.toLowerCase() === 'pending' ? '🟡' : creator.status.toLowerCase() === 'active' || creator.status.toLowerCase() === 'approved' ? '🟢' : '🔴'}</span>
+              <span className="text-[10px] sm:text-xs uppercase">{creator.status.toLowerCase() === 'pending' ? '🟡' : creator.status.toLowerCase() === 'active' || creator.status.toLowerCase() === 'approved' ? '🟢' : '🔴'}</span>
               {creator.status}
             </div>
           )}
         </div>
 
         {/* Instagram Icon */}
-        <div className="absolute top-0 right-0 bg-gradient-to-tr from-teal-500 to-teal-400 p-1.5 rounded-full text-neutral-900 shadow-[0_0_15px_rgba(20,184,166,0.5)]">
-          <Instagram className="w-3.5 h-3.5" />
+        <div className="absolute top-0 right-0 bg-gradient-to-tr from-teal-500 to-teal-400 p-1 sm:p-1.5 rounded-full text-neutral-900 shadow-[0_0_15px_rgba(20,184,166,0.5)]">
+          <Instagram className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
         </div>
 
-        <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-teal-500 to-cyan-400 shadow-[0_0_20px_rgba(20,184,166,0.3)] mt-4 shrink-0">
+        <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full p-[3px] bg-gradient-to-tr from-teal-500 to-cyan-400 shadow-[0_0_20px_rgba(20,184,166,0.3)] mt-6 sm:mt-4 shrink-0">
           <div className="w-full h-full bg-neutral-800 rounded-full relative overflow-hidden flex items-center justify-center">
             {/* Fallback Letter */}
-            <span className="text-4xl font-display font-bold text-neutral-500 absolute">
+            <span className="text-2xl sm:text-4xl font-display font-bold text-neutral-500 absolute">
               {igHandle[0]?.toUpperCase() || 'Z'}
             </span>
             <img 
@@ -175,15 +175,15 @@ export default function CreatorCard({ creator, onMessageCreator, userRole }: Cre
 
       {/* Info Container */}
       <div className="flex flex-col flex-grow text-center relative z-10">
-        <h3 className="font-display text-xl font-bold text-white mb-1 flex items-center justify-center drop-shadow-md">
+        <h3 className="font-display text-base sm:text-xl font-bold text-white mb-0.5 sm:mb-1 flex items-center justify-center drop-shadow-md">
           {igHandle}
-          <div className="ml-1.5 w-4 h-4 bg-teal-500 rounded-full flex items-center justify-center relative shadow-[0_0_8px_rgba(20,184,166,0.5)]">
-            <svg className="w-2.5 h-2.5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <div className="ml-1 sm:ml-1.5 w-3 h-3 sm:w-4 sm:h-4 bg-teal-500 rounded-full flex items-center justify-center relative shadow-[0_0_8px_rgba(20,184,166,0.5)]">
+            <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
         </h3>
-        <p className="text-sm font-medium text-teal-400 mb-4 drop-shadow-sm">{handleString}</p>
+        <p className="text-xs sm:text-sm font-medium text-teal-400 mb-2 sm:mb-4 drop-shadow-sm line-clamp-1">{handleString}</p>
 
         {/* Tabs */}
         <div className="flex space-x-6 mb-4 border-b border-neutral-800 pb-2 flex-shrink-0">

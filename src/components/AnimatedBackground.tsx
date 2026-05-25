@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 
 export default function AnimatedBackground() {
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1] bg-[#FAFAFA] dark:bg-neutral-950 transition-colors duration-300">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1] bg-[#FAFAFA] dark:bg-neutral-950 transition-colors duration-300" style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}>
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
@@ -15,7 +15,7 @@ export default function AnimatedBackground() {
           ease: "easeInOut"
         }}
         className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] rounded-full opacity-[0.35] dark:opacity-[0.15] mix-blend-multiply dark:mix-blend-screen filter blur-[100px] max-w-[800px] max-h-[800px]"
-        style={{ backgroundColor: '#06B6D4' }} // Teal
+        style={{ backgroundColor: '#06B6D4', willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       />
       <motion.div
         animate={{
@@ -29,7 +29,7 @@ export default function AnimatedBackground() {
           ease: "easeInOut"
         }}
         className="absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full opacity-[0.35] dark:opacity-[0.15] mix-blend-multiply dark:mix-blend-screen filter blur-[120px] max-w-[700px] max-h-[700px]"
-        style={{ backgroundColor: '#F97316' }} // Orange
+        style={{ backgroundColor: '#F97316', willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       />
       <motion.div
         animate={{
@@ -43,7 +43,7 @@ export default function AnimatedBackground() {
           ease: "easeInOut"
         }}
         className="absolute bottom-[-10%] left-[20%] w-[70vw] h-[70vw] rounded-full opacity-[0.25] dark:opacity-[0.1] mix-blend-multiply dark:mix-blend-screen filter blur-[140px] max-w-[1000px] max-h-[1000px]"
-        style={{ backgroundColor: '#06B6D4' }} // Teal
+        style={{ backgroundColor: '#06B6D4', willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       />
       <motion.div
         animate={{
@@ -58,7 +58,7 @@ export default function AnimatedBackground() {
           delay: 2
         }}
         className="absolute top-[40%] left-[10%] w-[50vw] h-[50vw] rounded-full opacity-[0.25] dark:opacity-[0.1] mix-blend-multiply dark:mix-blend-screen filter blur-[130px] max-w-[700px] max-h-[700px]"
-        style={{ backgroundColor: '#F97316' }} // Orange
+        style={{ backgroundColor: '#F97316', willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       />
     </div>
   );

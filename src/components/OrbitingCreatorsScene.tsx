@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useVelocity, useSpring, useTransform, useAnimationFrame, useMotionValue } from 'motion/react';
 
 const IDS = [
@@ -35,29 +35,35 @@ function OrbitRing({ radius, count, direction, duration, startIndex }: { radius:
   const counterRotation = useTransform(rotation, r => -r);
 
   return (
-    <motion.div className="absolute top-0 left-0 w-0 h-0" style={{ rotate: rotation }}>
+    <motion.div className="absolute top-0 left-0 w-0 h-0" style={{ rotate: rotation, willChange: 'transform', transform: 'translateZ(0)' }}>
       {[...Array(count)].map((_, i) => {
         const angle = (360 / count) * i;
-        const imgUrl = `https://images.unsplash.com/photo-${IDS[(startIndex + i) % IDS.length]}?w=200&h=200&fit=crop&q=80`;
+        let imgUrl = `https://images.unsplash.com/photo-${IDS[(startIndex + i) % IDS.length]}?w=200&h=200&fit=crop&q=80`;
+        
+        // Show custom photo in one specific empty space 
+        if (startIndex === 0 && i === 0) {
+          imgUrl = '/my-photo.jpg'; // Pending upload by user
+        }
 
         return (
           <div
             key={i}
             className="absolute top-0 left-0"
-            style={{ transform: `rotate(${angle}deg) translateX(${radius}px)` }}
+            style={{ transform: `rotate(${angle}deg) translateX(${radius}px) translateZ(0)`, willChange: 'transform' }}
           >
             {/* Outer div counter-rotates dynamically */}
             <motion.div
               className="absolute -ml-12 -mt-12 sm:-ml-14 sm:-mt-14 w-24 h-24 sm:w-28 sm:h-28"
-              style={{ rotate: counterRotation }}
+              style={{ rotate: counterRotation, willChange: 'transform', transform: 'translateZ(0)' }}
             >
               {/* Inner div cancels the container's static rotation */}
-              <div style={{ transform: `rotate(${-angle}deg)` }} className="w-full h-full">
+              <div style={{ transform: `rotate(${-angle}deg) translateZ(0)`, willChange: 'transform' }} className="w-full h-full">
                 <img
                   src={imgUrl}
                   alt="Creator"
                   className="w-full h-full object-cover rounded-[1.5rem] md:rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-white/80"
                   loading="lazy"
+                  style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
                 />
               </div>
             </motion.div>
@@ -69,16 +75,27 @@ function OrbitRing({ radius, count, direction, duration, startIndex }: { radius:
 }
 
 export default function OrbitingCreatorsScene() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const lg = matchMedia('(max-width: 768px)');
+    setIsMobile(lg.matches);
+    
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    lg.addEventListener('change', handler);
+    return () => lg.removeEventListener('change', handler);
+  }, []);
+
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 z-0 pointer-events-none scale-[0.45] sm:scale-50 md:scale-75 lg:scale-100">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 z-0 pointer-events-none scale-[0.45] sm:scale-50 md:scale-75 lg:scale-100" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
        {/* Ring 1 - Inner */}
-       <OrbitRing radius={280} count={6} direction="cw" duration={45} startIndex={0} />
+       <OrbitRing radius={280} count={isMobile ? 4 : 6} direction="cw" duration={45} startIndex={0} />
        
        {/* Ring 2 - Mid */}
-       <OrbitRing radius={480} count={10} direction="ccw" duration={65} startIndex={6} />
+       <OrbitRing radius={480} count={isMobile ? 6 : 10} direction="ccw" duration={65} startIndex={6} />
        
-       {/* Ring 3 - Outer */}
-       <OrbitRing radius={700} count={16} direction="cw" duration={85} startIndex={2} />
+       {/* Ring 3 - Outer - disabled on mobile */}
+       {!isMobile && <OrbitRing radius={700} count={16} direction="cw" duration={85} startIndex={2} />}
     </div>
   );
 }

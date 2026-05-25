@@ -52,11 +52,7 @@ export default function BorderCat() {
     };
 
     const handleGlobalClick = (e: MouseEvent) => {
-      state = 'looking';
-      actionTimeLeft = 2000;
-      showEmoteText("👀");
-      targetRotationOverride = Math.atan2(e.clientY - (y + s/2), e.clientX - (x + s/2)) * 180 / Math.PI + 90;
-      overrideTimeLeft = 2000;
+      // Disabled the eye tracking on click
     };
     
     window.addEventListener('click', handleGlobalClick);

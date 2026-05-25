@@ -56,7 +56,7 @@ export default function Hero({ onNavigate, onOpenReels }: { onNavigate: (view: '
                     "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop&q=80",
                     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80"
                   ].map((img, i) => (
-                    <img key={i} src={img} alt="Creator" className="w-12 h-12 rounded-full border-4 border-white object-cover shadow-sm" />
+                    <img key={i} src={img} alt="Creator" className="w-12 h-12 rounded-full border-4 border-white object-cover shadow-sm" loading="lazy" />
                   ))}
                </div>
                <div className="text-sm font-semibold text-neutral-800 tracking-wide">

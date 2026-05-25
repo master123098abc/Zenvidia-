@@ -5,10 +5,10 @@ import { motion } from 'motion/react';
 export default function DealRoom({ userRole, creator }: { userRole: 'BRAND' | 'CREATOR', creator?: any }) {
   const [messages, setMessages] = useState<any[]>([]);
   const [inputMsg, setInputMsg] = useState('');
-  const [basePay, setBasePay] = useState<number>(1000);
-  const [performanceBonus, setPerformanceBonus] = useState<number>(500);
+  const [basePay, setBasePay] = useState<number | ''>('');
+  const [performanceBonus, setPerformanceBonus] = useState<number | ''>('');
 
-  const totalValue = (basePay || 0) + (performanceBonus || 0);
+  const totalValue = (Number(basePay) || 0) + (Number(performanceBonus) || 0);
   const platformFee = Math.round(totalValue * 0.05);
 
   const handleSend = () => {
@@ -53,7 +53,7 @@ export default function DealRoom({ userRole, creator }: { userRole: 'BRAND' | 'C
                <input 
                  type="number" 
                  value={basePay}
-                 onChange={(e) => setBasePay(parseInt(e.target.value) || 0)}
+                 onChange={(e) => setBasePay(e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
                  className="w-full bg-gray-950 border border-teal-900/50 rounded-xl px-4 py-3 text-white font-medium focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors"
                />
              </div>
@@ -62,7 +62,7 @@ export default function DealRoom({ userRole, creator }: { userRole: 'BRAND' | 'C
                <input 
                  type="number" 
                  value={performanceBonus}
-                 onChange={(e) => setPerformanceBonus(parseInt(e.target.value) || 0)}
+                 onChange={(e) => setPerformanceBonus(e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
                  className="w-full bg-gray-950 border border-teal-900/50 rounded-xl px-4 py-3 text-white font-medium focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors"
                />
              </div>
