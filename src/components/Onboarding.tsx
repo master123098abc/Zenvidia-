@@ -140,6 +140,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       
       if (insertError) {
         console.error("Supabase Insert Error:", insertError);
+        if (insertError.message && insertError.message.includes("row-level security")) {
+           throw new Error("Row-Level Security (RLS) is blocking the save. Please disable RLS or add an INSERT policy for this table in your Supabase dashboard.");
+        }
         throw insertError;
       }
       

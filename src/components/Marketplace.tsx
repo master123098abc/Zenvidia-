@@ -19,7 +19,8 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
     try {
       const { data, error } = await supabase
         .from('creators')
-        .select('*');
+        .select('*')
+        .eq('status', 'active');
       if (error) throw error;
       setCreators(data ?? []);
     } catch (err: any) {
@@ -94,6 +95,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
           <div className="py-20 text-center">
              <h3 className="text-xl font-bold text-neutral-900 mb-2">No creators found</h3>
              <p className="text-neutral-500">Try adjusting your filters or search.</p>
+             <p className="text-neutral-400 text-sm mt-4">Note: The application is securely connected to your Supabase `creators` and `brands` tables.<br/>Only approved creators will appear here.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 max-w-sm mx-auto sm:max-w-none pb-8 pt-4 px-4 sm:px-0 overflow-y-auto overscroll-behavior-y-contain">

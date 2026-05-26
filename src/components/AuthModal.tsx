@@ -105,6 +105,12 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
         if (authError) throw authError;
         if (!authData?.user) throw new Error("Failed to sign up.");
         
+        if (!authData.session) {
+          setErrorMessage("Success! Please check your email inbox (and spam) to confirm your account.");
+          setIsLoggingIn(false);
+          return;
+        }
+
         onClose(); // The onAuthStateChange in App.tsx will pick this up
       }
     } catch (err: any) {
@@ -167,7 +173,11 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
             </div>
 
             {errorMessage && (
-              <div className="mb-4 p-3 bg-red-900/40 border border-red-500/50 rounded-lg text-red-200 text-sm font-medium text-center backdrop-blur-md">
+              <div className={`mb-4 p-3 border rounded-lg text-sm font-medium text-center backdrop-blur-md ${
+                errorMessage.startsWith("Success") 
+                  ? "bg-green-900/40 border-green-500/50 text-green-200"
+                  : "bg-red-900/40 border-red-500/50 text-red-200"
+              }`}>
                 {errorMessage}
               </div>
             )}

@@ -56,7 +56,8 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
     try {
       const { data, error } = await supabase
         .from('creators')
-        .select('*');
+        .select('*')
+        .eq('status', 'active');
         
       if (error) throw error;
       setCreators(data ?? []);
@@ -287,6 +288,7 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
                  </div>
                  <h3 className="text-xl font-bold text-white">No creators found</h3>
                  <p className="text-neutral-400 mt-2">Adjust your filters or search terms.</p>
+                 <p className="text-neutral-500 text-sm mt-4">Note: The application is securely connected to your Supabase `creators` and `brands` tables.<br/>Only approved creators will appear here. If your database is empty, register some creators and approve them in the Admin Dashboard.</p>
                </div>
              ) : (
                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-20">

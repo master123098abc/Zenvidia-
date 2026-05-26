@@ -178,7 +178,7 @@ export default function App() {
         handleLoginSuccess('CREATOR', creator.ig_handle, undefined, isInitialLoad);
       } else {
         // Needs onboarding
-        setView(prev => prev === 'HOME' ? 'ONBOARDING' : prev);
+        setView('ONBOARDING');
       }
     } catch (err) {
       console.error("Unhandled error in handleSessionUser:", err);
