@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
-import { X, Heart, MessageCircle, Share2, Instagram, Play } from 'lucide-react';
+import { X, Heart, MessageCircle, Share2, Instagram, Play, Volume2, VolumeX } from 'lucide-react';
 
 interface ReelData {
   url: string;
@@ -124,6 +124,7 @@ export default function ReelsFeedViewer({ onClose, onCollab }: { onClose: () => 
 const ReelCard: React.FC<{ reel: ReelData, onCollab?: (creatorId: number) => void }> = ({ reel, onCollab }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isBuffering, setIsBuffering] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -176,7 +177,15 @@ const ReelCard: React.FC<{ reel: ReelData, onCollab?: (creatorId: number) => voi
     <div className="h-full w-full snap-start flex-shrink-0 flex flex-col items-center justify-center relative bg-black">
          <>
            {/* Native HTML5 Video Player */}
-           <video src={reel.url} autoPlay loop muted playsInline preload="metadata" className="w-full h-full object-cover absolute inset-0 z-10 cursor-pointer" onClick={togglePlay} ref={videoRef} onWaiting={() => setIsBuffering(true)} onLoadStart={() => setIsBuffering(true)} onPlaying={() => setIsBuffering(false)} onCanPlay={() => setIsBuffering(false)} />
+           <video src={reel.url} autoPlay loop muted={isMuted} playsInline preload="metadata" className="w-full h-full object-cover absolute inset-0 z-10 cursor-pointer" onClick={togglePlay} ref={videoRef} onWaiting={() => setIsBuffering(true)} onLoadStart={() => setIsBuffering(true)} onPlaying={() => setIsBuffering(false)} onCanPlay={() => setIsBuffering(false)} />
+           
+           {/* Mute/Unmute Button */}
+           <button 
+             onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+             className="absolute top-4 right-4 z-[40] bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 text-white hover:bg-black/60 transition shadow-lg"
+           >
+             {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+           </button>
 
            {isBuffering && (
              <div className="absolute inset-0 z-[15] flex items-center justify-center pointer-events-none">

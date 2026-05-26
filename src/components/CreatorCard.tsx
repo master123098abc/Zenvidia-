@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Instagram, TrendingUp, Share2, Star, User, Play } from 'lucide-react';
+import { Instagram, TrendingUp, Share2, Star, User, Play, Volume2, VolumeX } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface CreatorProps {
@@ -19,6 +19,8 @@ interface CreatorProps {
 }
 
 const ReelEmbed: React.FC<{ reelUrl?: string | null, igHandle: string, index: number, creatorImage?: string }> = ({ reelUrl, igHandle, index, creatorImage }) => {
+  const [isMuted, setIsMuted] = useState(true);
+
   return (
     <div className="w-[280px] h-[480px] flex-shrink-0 snap-center rounded-2xl overflow-hidden bg-black/60 border border-neutral-800 relative shadow-lg group/reel inline-block">
       {reelUrl ? (
@@ -27,12 +29,18 @@ const ReelEmbed: React.FC<{ reelUrl?: string | null, igHandle: string, index: nu
             key={reelUrl}
             src={reelUrl}
             autoPlay={true}
-            muted={true}
+            muted={isMuted}
             loop={true}
             playsInline={true}
             preload="auto"
             className="w-full h-full object-cover absolute inset-0 z-10 bg-black pointer-events-none"
           />
+          <button 
+            onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+            className="absolute bottom-4 right-4 z-30 bg-black/40 backdrop-blur-md rounded-full p-2.5 border border-white/10 text-white hover:bg-black/60 transition shadow-lg"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
           <div className="absolute top-3 right-3 z-20">
              <a
                href={`https://instagram.com/${igHandle}`}
@@ -123,7 +131,7 @@ export default function CreatorCard({ creator, onMessageCreator, userRole }: Cre
   return (
     <div 
       onClick={handleClickCard}
-      className="group relative bg-neutral-900/90 backdrop-blur-xl rounded-[2rem] p-3 sm:p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(20,184,166,0.15)] border border-neutral-800 shadow-2xl h-full flex flex-col cursor-pointer overflow-hidden touch-action-pan-y"
+      className="group relative bg-neutral-900/90 backdrop-blur-xl rounded-[2rem] p-3 sm:p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(20,184,166,0.15)] border border-neutral-800 shadow-2xl h-full flex flex-col cursor-pointer overflow-hidden touch-pan-y"
     >
       
       {/* 2.5D Background Accent (visible on hover) */}
@@ -186,16 +194,16 @@ export default function CreatorCard({ creator, onMessageCreator, userRole }: Cre
         <p className="text-xs sm:text-sm font-medium text-teal-400 mb-2 sm:mb-4 drop-shadow-sm line-clamp-1">{handleString}</p>
 
         {/* Tabs */}
-        <div className="flex space-x-6 mb-4 border-b border-neutral-800 pb-2 flex-shrink-0">
+        <div className="flex space-x-4 mb-2 border-b border-neutral-800 pb-1 flex-shrink-0">
           <button 
             onClick={(e) => { e.stopPropagation(); setActiveTab('overview'); }}
-            className={`text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'overview' ? 'text-teal-400 border-b-2 border-teal-500 -mb-[9px] pb-2' : 'text-neutral-500 hover:text-neutral-300'}`}
+            className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'overview' ? 'text-teal-400 border-b-2 border-teal-500 -mb-[5px] pb-1' : 'text-neutral-500 hover:text-neutral-300'}`}
           >
             Overview
           </button>
           <button 
             onClick={(e) => { e.stopPropagation(); setActiveTab('reviews'); }}
-            className={`text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'reviews' ? 'text-teal-400 border-b-2 border-teal-500 -mb-[9px] pb-2' : 'text-neutral-500 hover:text-neutral-300'}`}
+            className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-colors ${activeTab === 'reviews' ? 'text-teal-400 border-b-2 border-teal-500 -mb-[5px] pb-1' : 'text-neutral-500 hover:text-neutral-300'}`}
           >
             Reviews
           </button>
@@ -208,39 +216,39 @@ export default function CreatorCard({ creator, onMessageCreator, userRole }: Cre
             className="flex flex-col flex-grow text-left"
           >
             {/* 1. Quick Stats Strip (Glassmorphism) */}
-            <div className="bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-sm mb-5 px-3 py-2 flex items-center justify-between text-[9px] sm:text-[10px] relative overflow-hidden group/stats whitespace-nowrap overflow-x-auto hide-scrollbar gap-2 sm:gap-0">
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm mb-3 px-3 py-2 flex flex-wrap items-center justify-start sm:justify-center text-xs relative overflow-hidden group/stats gap-2 sm:gap-3">
                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 via-transparent to-orange-500/10 opacity-0 group-hover/stats:opacity-100 transition-opacity" />
-               <div className="flex items-center gap-1 z-10">
+               <div className="flex items-center gap-1 z-10 shrink-0">
                  <span>⭐</span>
                  <span className="font-bold text-neutral-200">
                    {creator.follower_count ? Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(creator.follower_count) : '0'}
                  </span>
                </div>
-               <div className="hidden sm:block w-px h-3 bg-neutral-700 z-10 shrink-0"></div>
-               <div className="flex items-center gap-1 z-10">
+               <div className="w-px h-3 bg-neutral-700 z-10 shrink-0"></div>
+               <div className="flex items-center gap-1 z-10 shrink-0">
                  <span>🎯</span>
-                 <span className="font-medium text-neutral-300 truncate max-w-[60px]">
+                 <span className="font-medium text-neutral-300 truncate max-w-[80px]">
                    {niche}
                  </span>
                </div>
-               <div className="hidden sm:block w-px h-3 bg-neutral-700 z-10 shrink-0"></div>
-               <div className="flex items-center gap-1 z-10">
+               <div className="w-px h-3 bg-neutral-700 z-10 shrink-0 hidden sm:block"></div>
+               <div className="flex items-center gap-1 z-10 shrink-0">
                  <span>🗣️</span>
                  <span className="font-medium text-neutral-300">
                    {creator.primary_language || 'EN'}
                  </span>
                </div>
-               <div className="hidden sm:block w-px h-3 bg-neutral-700 z-10 shrink-0"></div>
-               <div className="flex items-center gap-1 text-teal-400 font-bold z-10">
+               <div className="w-px h-3 bg-neutral-700 z-10 shrink-0 hidden sm:block"></div>
+               <div className="flex items-center gap-1 text-teal-400 font-bold z-10 shrink-0">
                  <span>🚀</span>
                  <span>{creator.engagement_rate ? `~${creator.engagement_rate}%` : (creator.follower_count ? `~${Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(Math.floor(creator.follower_count * 0.15))}` : 'High')}</span>
                </div>
             </div>
 
             {/* 2. Netflix-style Reels Carousel */}
-            <div className="mb-2">
-              <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-3">Premium Reels</h4>
-              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2 -mx-2 px-2" style={{ touchAction: 'pan-x' }}>
+            <div className="mb-2 touch-pan-y" style={{ touchAction: 'pan-y' }}>
+              <h4 className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Premium Reels</h4>
+              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2 -mx-2 px-2">
                  {displayReels.map((url, i) => (
                     <ReelEmbed key={i} reelUrl={url} igHandle={igHandle} index={i} creatorImage={profileUrl} />
                  ))}
