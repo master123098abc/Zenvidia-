@@ -22,7 +22,7 @@ const ReelEmbed: React.FC<{ reelUrl?: string | null, igHandle: string, index: nu
   const [isMuted, setIsMuted] = useState(true);
 
   return (
-    <div className="w-[280px] h-[480px] flex-shrink-0 snap-center rounded-2xl overflow-hidden bg-black/60 border border-neutral-800 relative shadow-lg group/reel inline-block">
+    <div className="w-24 h-24 flex-shrink-0 snap-center rounded-full overflow-hidden bg-zinc-800 border-2 border-zinc-700 relative shadow-lg group/reel inline-block">
       {reelUrl ? (
         <>
           <video
@@ -33,49 +33,22 @@ const ReelEmbed: React.FC<{ reelUrl?: string | null, igHandle: string, index: nu
             loop={true}
             playsInline={true}
             preload="auto"
-            className="w-full h-full object-cover absolute inset-0 z-10 bg-black pointer-events-none"
+            className="w-full h-full object-cover aspect-square absolute inset-0 z-10 pointer-events-none"
           />
           <button 
             onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
-            className="absolute bottom-4 right-4 z-30 bg-black/40 backdrop-blur-md rounded-full p-2.5 border border-white/10 text-white hover:bg-black/60 transition shadow-lg"
+            className="absolute bottom-1 right-1 z-30 bg-black/40 backdrop-blur-md rounded-full p-1.5 border border-white/10 text-white hover:bg-black/60 transition shadow-lg scale-75"
           >
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
-          <div className="absolute top-3 right-3 z-20">
-             <a
-               href={`https://instagram.com/${igHandle}`}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="bg-black/40 backdrop-blur-md border border-white/10 text-white px-3 py-1.5 rounded-full font-bold text-[10px] flex items-center gap-1 hover:bg-black/60 transition shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
-               onClick={(e) => e.stopPropagation()}
-             >
-               🔗 Instagram
-             </a>
-          </div>
         </>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0 transition-opacity duration-300 opacity-100">
-           <div className="absolute inset-0 z-0 bg-neutral-900 overflow-hidden">
-             {creatorImage ? (
-               <img src={creatorImage} alt="" className="w-full h-full object-cover blur-xl opacity-40 mix-blend-overlay" />
-             ) : (
-               <div className="w-full h-full bg-gradient-to-b from-neutral-800 to-black"></div>
-             )}
-             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-           </div>
-           
-           <div className="relative z-10 flex flex-col items-center">
-             <a
-               href={`https://instagram.com/${igHandle}`}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="px-6 py-4 bg-white text-black rounded-xl font-bold hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center whitespace-nowrap text-lg"
-               onClick={(e) => e.stopPropagation()} 
-             >
-               <Play className="w-6 h-6 mr-2 fill-current" />
-               Instagram
-             </a>
-           </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-zinc-800 z-0">
+           {creatorImage ? (
+             <img src={creatorImage} alt="" className="w-full h-full object-cover aspect-square" />
+           ) : (
+             <Play className="w-6 h-6 text-neutral-600" />
+           )}
         </div>
       )}
     </div>

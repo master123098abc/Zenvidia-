@@ -16,6 +16,7 @@ interface ReelData {
 export default function ReelsFeedViewer({ onClose, onCollab }: { onClose: () => void, onCollab?: (creatorId: number) => void }) {
   const [reels, setReels] = useState<ReelData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [activeVideoId, setActiveVideoId] = useState<number | null>(0);
 
   useEffect(() => {
     // Add escape key listener
@@ -112,40 +113,35 @@ export default function ReelsFeedViewer({ onClose, onCollab }: { onClose: () => 
         <X className="w-6 h-6" />
       </button>
 
-      <div className="flex-1 w-full h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative">
+      <div className="h-[calc(100vh-64px)] w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar relative">
          {reels.map((reel, index) => (
-           <ReelCard key={index} reel={reel} onCollab={onCollab} />
+           <ReelCard key={index} reel={reel} index={index} activeVideoId={activeVideoId} setActiveVideoId={setActiveVideoId} onCollab={onCollab} />
          ))}
       </div>
     </motion.div>
   );
 }
 
-const ReelCard: React.FC<{ reel: ReelData, onCollab?: (creatorId: number) => void }> = ({ reel, onCollab }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
+const ReelCard: React.FC<{ reel: ReelData, index: number, activeVideoId: number | null, setActiveVideoId: (id: number) => void, onCollab?: (creatorId: number) => void }> = ({ reel, index, activeVideoId, setActiveVideoId, onCollab }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [userMuted, setUserMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const isActive = activeVideoId === index;
 
   useEffect(() => {
     const options = {
       root: null,
       rootMargin: '0px',
-      threshold: 0.5,
+      threshold: 0.6,
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          if (videoRef.current) {
-            videoRef.current.play().catch(e => console.log('play error', e));
-          }
-          setIsPlaying(true);
-        } else {
-          if (videoRef.current) {
-            videoRef.current.pause();
-          }
-          setIsPlaying(false);
+          setActiveVideoId(index);
         }
       });
     }, options);
@@ -159,7 +155,25 @@ const ReelCard: React.FC<{ reel: ReelData, onCollab?: (creatorId: number) => voi
         observer.unobserve(videoRef.current);
       }
     };
-  }, []);
+  }, [index, setActiveVideoId]);
+
+  useEffect(() => {
+    if (isActive) {
+      setIsPlaying(true);
+      if (!userMuted) {
+        setIsMuted(false);
+      }
+      if (videoRef.current) {
+        videoRef.current.play().catch(e => console.log('play error', e));
+      }
+    } else {
+      setIsPlaying(false);
+      setIsMuted(true);
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    }
+  }, [isActive, userMuted]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -173,16 +187,22 @@ const ReelCard: React.FC<{ reel: ReelData, onCollab?: (creatorId: number) => voi
     }
   };
 
+  const handleMuteToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMuted(!isMuted);
+    setUserMuted(true);
+  };
+
   return (
-    <div className="h-full w-full snap-start flex-shrink-0 flex flex-col items-center justify-center relative bg-black">
+    <div className="w-full h-full snap-start snap-always relative flex items-center justify-center bg-black">
          <>
            {/* Native HTML5 Video Player */}
-           <video src={reel.url} autoPlay loop muted={isMuted} playsInline preload="metadata" className="w-full h-full object-cover absolute inset-0 z-10 cursor-pointer" onClick={togglePlay} ref={videoRef} onWaiting={() => setIsBuffering(true)} onLoadStart={() => setIsBuffering(true)} onPlaying={() => setIsBuffering(false)} onCanPlay={() => setIsBuffering(false)} />
+           <video src={reel.url} loop muted={isMuted} playsInline preload="metadata" className="w-full h-full object-cover absolute inset-0 z-10 cursor-pointer" onClick={togglePlay} ref={videoRef} onWaiting={() => setIsBuffering(true)} onLoadStart={() => setIsBuffering(true)} onPlaying={() => setIsBuffering(false)} onCanPlay={() => setIsBuffering(false)} />
            
            {/* Mute/Unmute Button */}
            <button 
-             onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
-             className="absolute top-4 right-4 z-[40] bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 text-white hover:bg-black/60 transition shadow-lg"
+             onClick={handleMuteToggle}
+             className="absolute bottom-6 right-4 z-[50] p-3 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-white hover:bg-black/60 transition shadow-lg"
            >
              {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
            </button>
