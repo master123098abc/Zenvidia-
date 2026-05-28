@@ -56,8 +56,7 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
     try {
       const { data, error } = await supabase
         .from('creators')
-        .select('*')
-        .eq('status', 'active');
+        .select('*');
         
       if (error) throw error;
       setCreators(data ?? []);

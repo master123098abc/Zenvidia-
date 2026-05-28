@@ -21,8 +21,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
     try {
       const { data, error } = await supabase
         .from('creators')
-        .select('*')
-        .eq('status', 'active');
+        .select('*');
       if (error) throw error;
       setCreators(data ?? []);
     } catch (err: any) {
