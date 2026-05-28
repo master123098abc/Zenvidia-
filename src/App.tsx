@@ -91,26 +91,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    let mounted = true;
+    const timer = setTimeout(() => {
+      setIsAuthLoading(false);
+    }, 2000);
 
-    const initAuth = async () => {
+    const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!mounted) return;
+        clearTimeout(timer);
+        
         if (session?.user?.email === 'admin@zenvidia.com') {
            localStorage.setItem('zenova_admin', 'true');
            setUserRole('ADMIN');
            setView(prev => prev === 'HOME' ? 'ADMIN_DASHBOARD' : prev);
         }
         await handleSessionUser(session?.user, true);
-      } catch (err) {
-        console.error("Error in initAuth:", err);
-      } finally {
-        if (mounted) setIsAuthLoading(false);
+        setIsAuthLoading(false);
+      } catch (error) {
+        console.error("Auth check failed:", error);
       }
     };
 
-    initAuth();
+    checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       try {
@@ -124,27 +126,22 @@ export default function App() {
              setView(prev => prev === 'HOME' ? 'ADMIN_DASHBOARD' : prev);
           }
           await handleSessionUser(session?.user, false);
-        } else if (_event === 'SIGNED_OUT') {
-          handleLogout();
         }
+        // No SIGNED_OUT handling to completely match requirement
       } catch (err) {
         console.error("Auth change error", err);
       }
     });
 
     return () => {
-      mounted = false;
+      clearTimeout(timer);
       subscription.unsubscribe();
     };
   }, []);
 
   const handleSessionUser = async (user: any, isInitialLoad: boolean = false) => {
     if (!user) {
-      setCurrentUserHandle(null);
-      setCurrentBrandData(null);
-      setUserRole(null);
-      localStorage.removeItem('zenova_handle');
-      localStorage.removeItem('zenova_brand');
+      // Per instructions: onAuthStateChange should never reset user data, only explicit logout.
       return;
     }
 
@@ -253,21 +250,12 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      // 1. Terminate session on Supabase
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      // 2. Reset all global authentication states to null
+      await supabase.auth.signOut();
       setCurrentUserHandle(null);
       setCurrentBrandData(null);
       setUserRole(null);
-      
-      // 3. Clear localStorage to prevent any stale routing state
       localStorage.clear();
-      
-      // 4. Force route the user back to the public Home landing page
-      setView('HOME');
-      window.scrollTo(0, 0);
+      window.location.href = '/';
     } catch (err) {
       console.error("Sign Out Failed:", err);
     }

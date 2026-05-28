@@ -14,9 +14,16 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     fetchCreators(activeTab.toLowerCase());
   }, [activeTab]);
 
+  // GLOBAL SAFETY NET
+  useEffect(() => {
+    const safety = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
+    return () => clearTimeout(safety);
+  }, []);
+
   const fetchCreators = async (status: string) => {
     setIsLoading(true);
-    const timeoutId = setTimeout(() => setIsLoading(false), 5000);
     try {
       const { data, error } = await supabase
         .from('creators')
@@ -27,11 +34,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       if (error) {
         throw error;
       }
-      if (data) setCreators(data);
+      if (data && data.length > 0) setCreators(data);
     } catch (err: any) {
       console.error("Fetch Error:", err);
     } finally {
-      clearTimeout(timeoutId);
       setIsLoading(false);
     }
   };

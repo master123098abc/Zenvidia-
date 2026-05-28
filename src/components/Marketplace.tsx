@@ -12,26 +12,30 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
-    fetchPublicProfiles();
-  }, []); // Only fetch once correctly
+    fetchCreators();
+  }, []); // ONCE only
 
-  const fetchPublicProfiles = async () => {
-    setErrorMsg(null);
-    setIsDataLoading(true);
+  const fetchCreators = async () => {
     try {
-      const { data, error } = await supabase
-        .from('creators')
-        .select('*');
-      if (error) throw error;
-      setCreators(data ?? []);
+      const { data } = await supabase.from('creators').select('*');
+      if (data && data.length > 0) {
+        setCreators(data);
+      }
     } catch (err: any) {
-      console.error('Error fetching profiles:', err);
+      console.error('Error fetching creators:', err);
       setErrorMsg(err.message || 'Error occurred while fetching data');
-      // Do not reset or clear the creators array if this fails during an auth transition
     } finally {
       setIsDataLoading(false);
     }
   };
+
+  // GLOBAL SAFETY NET
+  useEffect(() => {
+    const safety = setTimeout(() => {
+      setIsDataLoading(false);
+    }, 4000);
+    return () => clearTimeout(safety);
+  }, []);
   
   // BYPASS ALL CONDITIONAL FILTERS for now. Just map what we have from Supabase.
   const filteredCreators = creators;
@@ -103,7 +107,6 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
           <div className="py-20 text-center">
              <h3 className="text-xl font-bold text-neutral-900 mb-2">No creators found</h3>
              <p className="text-neutral-500">Try adjusting your filters or search.</p>
-             <p className="text-neutral-400 text-sm mt-4">Note: The application is securely connected to your Supabase `creators` and `brands` tables.<br/>Only approved creators will appear here.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 max-w-sm mx-auto sm:max-w-none pb-8 pt-4 px-4 sm:px-0 overflow-y-auto overscroll-behavior-y-contain">

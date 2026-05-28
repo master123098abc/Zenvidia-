@@ -48,25 +48,29 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetchPublicCreators();
-  }, []); // EXACTLY AS REQUESTED: [] NOT [user]
+    fetchCreators();
+  }, []); // ONCE only
 
-  const fetchPublicCreators = async () => {
-    setIsLoadingCreators(true);
+  const fetchCreators = async () => {
     try {
-      const { data, error } = await supabase
-        .from('creators')
-        .select('*');
-        
-      if (error) throw error;
-      setCreators(data ?? []);
+      const { data } = await supabase.from('creators').select('*');
+      if (data && data.length > 0) {
+        setCreators(data);
+      }
     } catch (err) {
       console.error('Error fetching creators', err);
-      // Do not reset or clear the creators array if this fails during an auth transition
     } finally {
       setIsLoadingCreators(false);
     }
   };
+
+  // GLOBAL SAFETY NET
+  useEffect(() => {
+    const safety = setTimeout(() => {
+      setIsLoadingCreators(false);
+    }, 4000);
+    return () => clearTimeout(safety);
+  }, []);
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -287,7 +291,6 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
                  </div>
                  <h3 className="text-xl font-bold text-white">No creators found</h3>
                  <p className="text-neutral-400 mt-2">Adjust your filters or search terms.</p>
-                 <p className="text-neutral-500 text-sm mt-4">Note: The application is securely connected to your Supabase `creators` and `brands` tables.<br/>Only approved creators will appear here. If your database is empty, register some creators and approve them in the Admin Dashboard.</p>
                </div>
              ) : (
                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-20">

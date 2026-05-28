@@ -5,10 +5,10 @@ ALTER TABLE public.creators ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.brands ENABLE ROW LEVEL SECURITY;
 
 -- Creators table policies
--- 1. Anyone can read active creators
-CREATE POLICY "Anyone can view active creators"
+-- 1. Anyone can read creators
+CREATE POLICY "Anyone can view creators"
 ON public.creators FOR SELECT
-USING (status = 'active');
+USING (true);
 
 -- 2. Admins can view all creators (including pending and rejected)
 CREATE POLICY "Admins can view all creators"
