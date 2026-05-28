@@ -38,6 +38,7 @@ export default function App() {
   const [userRole, setUserRole] = useState<'BRAND' | 'CREATOR' | 'ADMIN' | null>(
     localStorage.getItem('zenova_admin') ? 'ADMIN' : (localStorage.getItem('zenova_brand') ? 'BRAND' : (localStorage.getItem('zenova_handle') ? 'CREATOR' : null))
   );
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const [activeCreatorId, setActiveCreatorId] = useState<number | null>(null);
 
@@ -104,6 +105,8 @@ export default function App() {
         await handleSessionUser(session?.user, true);
       } catch (err) {
         console.error("Error in initAuth:", err);
+      } finally {
+        if (mounted) setIsAuthLoading(false);
       }
     };
 
@@ -330,9 +333,16 @@ export default function App() {
       />
       
       <main className="flex-1 flex flex-col">
-        {view === 'ONBOARDING' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 w-full relative z-10">
-            <Onboarding onComplete={(role, handle, dataObj) => {
+        {isAuthLoading && view !== 'HOME' ? (
+          <div className="flex-1 flex items-center justify-center">
+             <div className="w-8 h-8 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin mr-3" />
+             <p className="text-sm font-medium text-neutral-500">Authenticating...</p>
+          </div>
+        ) : (
+          <>
+            {view === 'ONBOARDING' && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 w-full relative z-10">
+                <Onboarding onComplete={(role, handle, dataObj) => {
               if (role === 'CREATOR') {
                  localStorage.setItem('zenova_handle', handle);
                  setCurrentUserHandle(handle);
@@ -425,6 +435,8 @@ export default function App() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 min-h-screen z-10 relative">
             <AdminDashboard onLogout={handleLogout} />
           </motion.div>
+        )}
+          </>
         )}
       </main>
 

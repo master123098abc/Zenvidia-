@@ -9,6 +9,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
   const [searchQuery, setSearchQuery] = useState("");
   const [creators, setCreators] = useState<any[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
     fetchPublicProfiles();
@@ -16,6 +17,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
 
   const fetchPublicProfiles = async () => {
     setErrorMsg(null);
+    setIsDataLoading(true);
     try {
       const { data, error } = await supabase
         .from('creators')
@@ -27,6 +29,8 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
       console.error('Error fetching profiles:', err);
       setErrorMsg(err.message || 'Error occurred while fetching data');
       // Do not reset or clear the creators array if this fails during an auth transition
+    } finally {
+      setIsDataLoading(false);
     }
   };
   
@@ -91,7 +95,12 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
           </div>
         )}
         
-        {filteredCreators.length === 0 && !errorMsg ? (
+        {isDataLoading ? (
+          <div className="py-20 flex justify-center items-center">
+            <div className="w-8 h-8 rounded-full border-2 border-neutral-900 border-t-transparent animate-spin mr-3"></div>
+            <p className="text-neutral-500 font-medium">Loading Creators...</p>
+          </div>
+        ) : filteredCreators.length === 0 && !errorMsg ? (
           <div className="py-20 text-center">
              <h3 className="text-xl font-bold text-neutral-900 mb-2">No creators found</h3>
              <p className="text-neutral-500">Try adjusting your filters or search.</p>
