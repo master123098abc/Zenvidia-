@@ -25,7 +25,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         const avatarUrl = data.user.user_metadata?.avatar_url;
         if (metaRole === 'brand' || metaRole === 'BRAND') setRole('BRAND');
         else if (metaRole === 'creator' || metaRole === 'CREATOR') setRole('CREATOR');
-        else setRole('CREATOR'); // Default fallback if somehow still null
+        else {
+          const intent = localStorage.getItem('zenvidia_role_intent');
+          if (intent === 'brand') setRole('BRAND');
+          else if (intent === 'creator') setRole('CREATOR');
+          else setRole('CREATOR'); // Default fallback if somehow still null
+        }
+        
+        localStorage.removeItem('zenvidia_role_intent');
 
         if (avatarUrl) {
            setExistingAvatarUrl(avatarUrl);

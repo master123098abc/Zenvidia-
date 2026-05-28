@@ -26,7 +26,7 @@ export default function Marketplace({ onMessageCreator, userRole }: { onMessageC
     } catch (err: any) {
       console.error('Error fetching profiles:', err);
       setErrorMsg(err.message || 'Error occurred while fetching data');
-      setCreators([]);
+      // Do not reset or clear the creators array if this fails during an auth transition
     }
   };
   

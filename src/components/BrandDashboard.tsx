@@ -63,7 +63,7 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
       setCreators(data ?? []);
     } catch (err) {
       console.error('Error fetching creators', err);
-      setCreators([]);
+      // Do not reset or clear the creators array if this fails during an auth transition
     } finally {
       setIsLoadingCreators(false);
     }

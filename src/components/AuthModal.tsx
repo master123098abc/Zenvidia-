@@ -53,11 +53,14 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
   const handleGoogleAuth = async () => {
     setErrorMessage('');
     try {
+      if (signupRole) {
+        localStorage.setItem('zenvidia_role_intent', signupRole);
+      }
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: window.location.origin,
-          // Note: for google auth, we might have to handle role selection either before or after
         }
       });
       if (error) {

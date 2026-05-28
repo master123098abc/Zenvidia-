@@ -195,6 +195,10 @@ export default function App() {
   }, [showIntro]);
 
   const handleLoginSuccess = (type: 'BRAND' | 'CREATOR', handle?: string, data?: any, isInitialLoad: boolean = false) => {
+    // Read the role intent persisted from Google OAuth
+    const persistedIntent = localStorage.getItem('zenvidia_role_intent');
+    const intentToUse = authIntent || persistedIntent;
+
     if (type === 'CREATOR' && handle) {
       localStorage.setItem('zenova_handle', handle);
       setCurrentUserHandle(handle);
@@ -204,12 +208,14 @@ export default function App() {
          // creators can't message other creators currently, direct to portal
       }
       
-      if (!isInitialLoad && authIntent === 'brand') {
+      if (!isInitialLoad && intentToUse === 'brand') {
         setView('BRAND_DASHBOARD');
         setAuthIntent(null);
-      } else if (!isInitialLoad && authIntent === 'creator') {
+        localStorage.removeItem('zenvidia_role_intent');
+      } else if (!isInitialLoad && intentToUse === 'creator') {
         setView('CREATOR_PORTAL');
         setAuthIntent(null);
+        localStorage.removeItem('zenvidia_role_intent');
       } else {
         setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'CREATOR_PORTAL' : prev);
       }
@@ -223,17 +229,22 @@ export default function App() {
          setPendingCreatorId(null);
          setTimeout(() => handleMessageCreator(pid), 0);
       } else {
-         if (!isInitialLoad && authIntent === 'brand') {
+         if (!isInitialLoad && intentToUse === 'brand') {
            setView('BRAND_DASHBOARD');
            setAuthIntent(null);
-         } else if (!isInitialLoad && authIntent === 'creator') {
+           localStorage.removeItem('zenvidia_role_intent');
+         } else if (!isInitialLoad && intentToUse === 'creator') {
            setView('CREATOR_PORTAL');
            setAuthIntent(null);
+           localStorage.removeItem('zenvidia_role_intent');
          } else {
            setView(prev => (prev === 'HOME' || prev === 'ONBOARDING') ? 'BRAND_DASHBOARD' : prev);
          }
       }
     }
+    
+    // Fallback clear just in case
+    localStorage.removeItem('zenvidia_role_intent');
     window.scrollTo(0, 0);
   };
 
