@@ -349,7 +349,7 @@ export default function App() {
           </motion.div>
         )}
 
-        {(view === 'HOME' || view === 'BRAND_DASHBOARD' || view === 'CREATOR_PORTAL') && (
+        {(view === 'HOME' || view === 'BRAND_DASHBOARD') && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {view === 'HOME' && (
               <>
