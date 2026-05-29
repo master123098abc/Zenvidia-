@@ -85,8 +85,8 @@ export default function App() {
     
     return () => {
       window.removeEventListener('click', handleGlobalClick);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchstart', handleTouchStart, { passive: true } as any);
+      window.removeEventListener('touchend', handleTouchEnd, { passive: true } as any);
     }
   }, []);
 
@@ -318,6 +318,7 @@ export default function App() {
       <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setAuthModalOpen(false)} 
+        onLoginSuccess={handleLoginSuccess}
       />
       
       <main className="flex-1 flex flex-col">
@@ -349,16 +350,11 @@ export default function App() {
           </motion.div>
         )}
 
-        {(view === 'HOME' || view === 'BRAND_DASHBOARD') && (
+        {view === 'HOME' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {view === 'HOME' && (
-              <>
-                <Hero onNavigate={handleNavigate} onOpenReels={() => setShowReelsFeed(true)} />
-                <GamosaAccent />
-              </>
-            )}
+            <Hero onNavigate={handleNavigate} onOpenReels={() => setShowReelsFeed(true)} />
+            <GamosaAccent />
             
-            {/* ALways render marketplace regardless of login state, as requested */}
             <Marketplace onMessageCreator={handleMessageCreator} userRole={userRole} />
           </motion.div>
         )}
