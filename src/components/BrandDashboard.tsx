@@ -79,9 +79,9 @@ export default function BrandDashboard({ brandData, onMessage, onLogout }: Brand
     setIsUploading(true);
     
     try {
-      // Cloudinary Setup (User provided placeholders: [name], [preset])
-      const CLOUDINARY_CLOUD_NAME = '[name]'; 
-      const CLOUDINARY_UPLOAD_PRESET = '[preset]'; 
+      // Cloudinary Setup
+      const CLOUDINARY_CLOUD_NAME = 'dooosiyxw'; 
+      const CLOUDINARY_UPLOAD_PRESET = 'Zenvidia'; 
       
       const formData = new FormData();
       formData.append('file', file);

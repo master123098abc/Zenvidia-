@@ -120,7 +120,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
         const { error } = await supabase.from('creators').insert({
           user_id: currentUserId,
-          ig_handle: cIgHandle,
+          ig_handle: cIgHandle.replace('@', ''),
           follower_count: parseInt(cFollowers) || 0,
           profile_url: uploadedPhotoUrl,
           primary_niche: cPrimaryNiche,
@@ -134,7 +134,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         const { error } = await supabase.from('brands').insert({
           user_id: currentUserId,
           business_name: bBusinessName,
-          ig_handle: bIgHandle,
+          ig_handle: bIgHandle.replace('@', ''),
           business_type: bBusinessType,
           budget: parseInt(bBudget) || 0,
           phone: bPhone,
@@ -155,9 +155,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
       
       console.log("Insert successful, calling onComplete()");
       if (role === 'CREATOR') {
-          onComplete('CREATOR', cIgHandle, {
+          onComplete('CREATOR', cIgHandle.replace('@', ''), {
             user_id: currentUserId,
-            ig_handle: cIgHandle,
+            ig_handle: cIgHandle.replace('@', ''),
             follower_count: parseInt(cFollowers) || 0,
             profile_url: uploadedPhotoUrl,
             niche: cPrimaryNiche,
@@ -168,10 +168,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             status: 'pending' // Usually pending by default
           });
       } else {
-          onComplete('BRAND', bIgHandle, {
+          onComplete('BRAND', bIgHandle.replace('@', ''), {
             user_id: currentUserId,
             business_name: bBusinessName,
-            ig_handle: bIgHandle,
+            ig_handle: bIgHandle.replace('@', ''),
             business_type: bBusinessType,
             budget: parseInt(bBudget) || 0,
             phone: bPhone,

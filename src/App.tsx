@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import GamosaAccent from './components/GamosaAccent';
@@ -39,6 +39,7 @@ export default function App() {
     localStorage.getItem('zenova_admin') ? 'ADMIN' : (localStorage.getItem('zenova_brand') ? 'BRAND' : (localStorage.getItem('zenova_handle') ? 'CREATOR' : null))
   );
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const isHandlingSession = useRef(false);
 
   const [activeCreatorId, setActiveCreatorId] = useState<number | null>(null);
 
@@ -145,11 +146,14 @@ export default function App() {
       return;
     }
 
-    if (user.email === 'admin@zenvidia.com') {
-      return; // Admin doesn't need to load brand/creator profile
-    }
+    if (isHandlingSession.current) return;
+    isHandlingSession.current = true;
 
     try {
+      if (user.email === 'admin@zenvidia.com') {
+        return; // Admin doesn't need to load brand/creator profile
+      }
+
       let brand = null;
       let creator = null;
       
@@ -182,6 +186,8 @@ export default function App() {
       }
     } catch (err) {
       console.error("Unhandled error in handleSessionUser:", err);
+    } finally {
+      isHandlingSession.current = false;
     }
   };
 

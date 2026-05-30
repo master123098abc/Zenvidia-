@@ -28,6 +28,8 @@ export default function CreatorInbox({ currentCreatorId, onChatOpen }: CreatorIn
   const [inputMsg, setInputMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
+  const [myLocalId, setMyLocalId] = useState<string | null>(currentCreatorId || null);
+  
   const [showCounterModal, setShowCounterModal] = useState(false);
   const [counterText, setCounterText] = useState('');
 
@@ -103,6 +105,7 @@ export default function CreatorInbox({ currentCreatorId, onChatOpen }: CreatorIn
       const { data: userData } = await supabase.auth.getUser();
       const uid = currentCreatorId || userData?.user?.id;
       if (!uid) return;
+      setMyLocalId(uid);
 
       // Fetch deals where user is involved and not declined
       const { data: dealsData, error: dealsError } = await supabase
@@ -266,7 +269,7 @@ export default function CreatorInbox({ currentCreatorId, onChatOpen }: CreatorIn
     }
   };
 
-  const myId = currentCreatorId; // Simplification
+  const myId = myLocalId; // Simplification
 
   const visibleChats = chats.filter(c => 
     activeTab === 'MESSAGES' ? c.status === 'accepted' : (c.status === 'pending' || c.status === 'negotiating' || c.status === 'offered')

@@ -140,7 +140,7 @@ export default function ChatInterface({ activeCreatorId, onBrowseCreators, curre
                    ...m,
                    sender: m.sender_id === userData.user.id ? 'ME' : 'THEM' // fallback
                 }));
-                setMessages(msgs);
+                setMessages(mappedMsgs);
              }
            } catch(e) {}
         }
@@ -381,7 +381,7 @@ export default function ChatInterface({ activeCreatorId, onBrowseCreators, curre
 
             {/* Render Text Messages */}
             {messages.map((msg, idx) => {
-               const isMe = msg.sender === 'BRAND';
+               const isMe = msg.sender === 'BRAND' || msg.sender === 'ME';
                return (
                  <div key={msg.id || idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'} w-full mt-4`}>
                    <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-[15px] sm:text-base ${isMe ? 'bg-cyan-600 text-white border border-cyan-500/20' : 'bg-neutral-800 text-neutral-100 border border-neutral-700'}`}>
